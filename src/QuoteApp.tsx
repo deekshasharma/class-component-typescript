@@ -15,9 +15,17 @@ export default class QuoteApp extends React.Component<QuoteProps, QuoteState> {
     };
 
     getIndex = (): number => {
-        const min: number = 0;
-        const max: number = this.props.quotes.length - 1;
-        return Math.floor(Math.random() * (max - min) + min);
+        // avoid infinite loop if there is only one quote
+        if (this.props.quotes.length === 1) {
+            return this.state.currentIndex;
+        }
+
+        // get a random index that is not the same as the current index
+        var next;
+        do {
+            next = Math.floor(Math.random() * this.props.quotes.length);
+        } while (next === this.state.currentIndex);
+        return next;
     };
 
     getNextQuote = (): void => this.setState(state => ({currentIndex: this.getIndex()}));
